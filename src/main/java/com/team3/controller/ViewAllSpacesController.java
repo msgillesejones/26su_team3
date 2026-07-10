@@ -59,8 +59,9 @@ public class ViewAllSpacesController {
     private void openDetails(Space space) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/view-space-details.fxml")
+                getClass().getResource("/com/example/_6su_team3/view-space-details.fxml")
             );
+
             Parent root = loader.load();
 
             SpaceDetailsController controller = loader.getController();
@@ -70,11 +71,9 @@ public class ViewAllSpacesController {
             stage.setTitle("Space Details");
             stage.setScene(new Scene(root));
             stage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
-
-
-

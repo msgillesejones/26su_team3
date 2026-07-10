@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.team3.controller.ViewAllSpacesController">
+
+    <center>
+        <TableView fx:id="table">
+            <columns>
+                <TableColumn fx:id="nameColumn" text="Name" />
+<TableColumn fx:id="capacityColumn" text="Capacity" />
+<TableColumn fx:id="featuresColumn" text="Features" />
+
+            </columns>
+        </TableView>
+    </center>
+
+</BorderPane>

@@ -28,6 +28,9 @@ public class ViewAllSpacesController {
     @FXML
     private TableColumn<Space, String> featuresColumn;
 
+    @FXML
+    private javafx.scene.control.TextField nameSearchField;
+
     public void initialize() {
 
         // Set up columns
@@ -49,6 +52,22 @@ public class ViewAllSpacesController {
             new Space("Auditorium", 200, "Stage, Sound System"),
             new Space("Study Room", 6, "Quiet Space")
         );
+
+        // US-5: Search by name
+        FilteredList<Space> filteredList = new FilteredList<>(table.getItems(), p -> true);
+        table.setItems(filteredList);
+
+        nameSearchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredList.setPredicate(space -> {
+
+                if (newValue == null || newValue.isBlank()) {
+                    return true;
+                }
+
+                String searchText = newValue.toLowerCase();
+                return space.getName().toLowerCase().contains(searchText);
+            });
+        });
 
         // Double-click handler
         table.setOnMouseClicked(event -> {
@@ -116,4 +135,3 @@ public class ViewAllSpacesController {
         }
     }
 }
-

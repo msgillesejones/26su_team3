@@ -60,7 +60,7 @@ public class ViewAllSpacesController {
         nameSearchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredList.setPredicate(space -> {
 
-                if (newValue == null || newValue.isBlank()) {
+                if (newValue == null || newValue.trim().isEmpty()) {
                     return true;
                 }
 

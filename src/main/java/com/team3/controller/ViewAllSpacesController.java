@@ -134,4 +134,24 @@ public class ViewAllSpacesController {
             e.printStackTrace();
         }
     }
+
+    
+    public void openDayAvailability() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/example/_6su_team3/view-day-availability.fxml")
+            );
+
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Day Availability");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
+

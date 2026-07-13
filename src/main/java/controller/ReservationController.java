@@ -5,8 +5,26 @@ public class ReservationController {
             new java.util.ArrayList<>();
     public ReservationController() {
     }
-    public void addReservation(model.ReservationRecord reservation) {
+    public boolean addReservation(model.ReservationRecord reservation) {
+        if (!isValidTimeRange(
+                reservation.getStartTime(),
+                reservation.getEndTime()
+        )) {
+            return false;
+        }
+        boolean available = isAvailable(
+                reservation.getSpaceName(),
+                reservation.getDate(),
+                reservation.getStartTime(),
+                reservation.getEndTime()
+        );
+
+        if (!available) {
+            return false;
+        }
+
         reservations.add(reservation);
+        return true;
     }
     public java.util.List<model.ReservationRecord> getReservations() {
         return reservations;
@@ -21,6 +39,12 @@ public class ReservationController {
             }
         }
 
+        userReservations.sort(
+                java.util.Comparator
+                        .comparing(model.ReservationRecord::getDate)
+                        .thenComparing(model.ReservationRecord::getStartTime)
+        );
+
         return userReservations;
     }
     public boolean cancelReservation(model.ReservationRecord reservation) {
@@ -34,7 +58,28 @@ public class ReservationController {
             return false;
         }
 
-        reservations.set(index, newReservation);
+        if (!isValidTimeRange(
+                newReservation.getStartTime(),
+                newReservation.getEndTime()
+        )) {
+            return false;
+        }
+
+        reservations.remove(index);
+
+        boolean available = isAvailable(
+                newReservation.getSpaceName(),
+                newReservation.getDate(),
+                newReservation.getStartTime(),
+                newReservation.getEndTime()
+        );
+
+        if (!available) {
+            reservations.add(index, oldReservation);
+            return false;
+        }
+
+        reservations.add(index, newReservation);
         return true;
     }
     public boolean isAvailable(String spaceName, String date, String startTime, String endTime) {
@@ -43,15 +88,41 @@ public class ReservationController {
             boolean sameDate = reservation.getDate().equals(date);
 
             if (sameSpace && sameDate) {
-                boolean overlaps = startTime.compareTo(reservation.getEndTime()) < 0
-                        && endTime.compareTo(reservation.getStartTime()) > 0;
+                java.time.LocalTime requestedStart = java.time.LocalTime.parse(startTime);
+                java.time.LocalTime requestedEnd = java.time.LocalTime.parse(endTime);
 
-                if (overlaps) {
+                java.time.LocalTime existingStart =
+                        java.time.LocalTime.parse(reservation.getStartTime());
+                java.time.LocalTime existingEnd =
+                        java.time.LocalTime.parse(reservation.getEndTime());
+
+                boolean overlapsOrBreaksBuffer =
+                        requestedStart.isBefore(existingEnd.plusMinutes(10))
+                                && requestedEnd.isAfter(existingStart.minusMinutes(10));
+
+                if (overlapsOrBreaksBuffer) {
                     return false;
                 }
             }
         }
 
         return true;
+    }
+    private boolean isValidTimeRange(String startTime, String endTime) {
+        try {
+            java.time.LocalTime start = java.time.LocalTime.parse(startTime);
+            java.time.LocalTime end = java.time.LocalTime.parse(endTime);
+
+            if (!end.isAfter(start)) {
+                return false;
+            }
+
+            long durationMinutes =
+                    java.time.Duration.between(start, end).toMinutes();
+
+            return durationMinutes <= 120;
+        } catch (java.time.format.DateTimeParseException e) {
+            return false;
+        }
     }
 }

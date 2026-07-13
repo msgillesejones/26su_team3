@@ -1,11 +1,13 @@
-package controller;
+package com.team3.controller;
+
+import com.team3.model.ReservationRecord;
 
 public class ReservationController {
-    private final java.util.List<model.ReservationRecord> reservations =
+    private final java.util.List<ReservationRecord> reservations =
             new java.util.ArrayList<>();
     public ReservationController() {
     }
-    public boolean addReservation(model.ReservationRecord reservation) {
+    public boolean addReservation(ReservationRecord reservation) {
         if (!isValidTimeRange(
                 reservation.getStartTime(),
                 reservation.getEndTime()
@@ -26,14 +28,14 @@ public class ReservationController {
         reservations.add(reservation);
         return true;
     }
-    public java.util.List<model.ReservationRecord> getReservations() {
+    public java.util.List<ReservationRecord> getReservations() {
         return reservations;
     }
-    public java.util.List<model.ReservationRecord> getReservationsForUser(String userName) {
-        java.util.List<model.ReservationRecord> userReservations =
+    public java.util.List<ReservationRecord> getReservationsForUser(String userName) {
+        java.util.List<ReservationRecord> userReservations =
                 new java.util.ArrayList<>();
 
-        for (model.ReservationRecord reservation : reservations) {
+        for (ReservationRecord reservation : reservations) {
             if (reservation.matchesUser(userName)) {
                 userReservations.add(reservation);
             }
@@ -41,17 +43,17 @@ public class ReservationController {
 
         userReservations.sort(
                 java.util.Comparator
-                        .comparing(model.ReservationRecord::getDate)
-                        .thenComparing(model.ReservationRecord::getStartTime)
+                        .comparing(ReservationRecord::getDate)
+                        .thenComparing(ReservationRecord::getStartTime)
         );
 
         return userReservations;
     }
-    public boolean cancelReservation(model.ReservationRecord reservation) {
+    public boolean cancelReservation(ReservationRecord reservation) {
         return reservations.remove(reservation);
     }
-    public boolean modifyReservation(model.ReservationRecord oldReservation,
-                                     model.ReservationRecord newReservation) {
+    public boolean modifyReservation(ReservationRecord oldReservation,
+                                     ReservationRecord newReservation) {
         int index = reservations.indexOf(oldReservation);
 
         if (index == -1) {
@@ -83,7 +85,7 @@ public class ReservationController {
         return true;
     }
     public boolean isAvailable(String spaceName, String date, String startTime, String endTime) {
-        for (model.ReservationRecord reservation : reservations) {
+        for (ReservationRecord reservation : reservations) {
             boolean sameSpace = reservation.getSpaceName().equalsIgnoreCase(spaceName);
             boolean sameDate = reservation.getDate().equals(date);
 

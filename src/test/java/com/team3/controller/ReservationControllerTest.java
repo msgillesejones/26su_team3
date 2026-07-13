@@ -1,6 +1,6 @@
-package controller;
+package com.team3.controller;
 
-import model.ReservationRecord;
+import com.team3.model.ReservationRecord;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;

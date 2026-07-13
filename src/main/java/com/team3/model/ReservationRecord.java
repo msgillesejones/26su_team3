@@ -1,4 +1,4 @@
-package model;
+package com.team3.model;
 
 public class ReservationRecord {
     private String spaceName;

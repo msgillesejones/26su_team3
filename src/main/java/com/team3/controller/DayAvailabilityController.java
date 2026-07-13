@@ -9,8 +9,10 @@ import javafx.beans.property.SimpleStringProperty;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.team3.model.Space;
 
 public class DayAvailabilityController {
+    private Space selectedSpace;
 
     @FXML
     private DatePicker datePicker;
@@ -23,6 +25,10 @@ public class DayAvailabilityController {
 
     @FXML
     private TableColumn<TimeSlot, String> statusColumn;
+
+    public void setSpace(Space space) {
+        this.selectedSpace = space;
+    }
 
     public void initialize() {
         timeColumn.setCellValueFactory(data ->

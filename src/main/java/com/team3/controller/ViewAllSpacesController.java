@@ -144,6 +144,16 @@ public class ViewAllSpacesController {
 
             Parent root = loader.load();
 
+            Space selected = table.getSelectionModel().getSelectedItem();
+
+            if (selected == null) {
+                System.out.println("Please select a space first.");
+                return;
+            }
+
+            DayAvailabilityController controller = loader.getController();
+            controller.setSpace(selected);
+
             Stage stage = new Stage();
             stage.setTitle("Day Availability");
             stage.setScene(new Scene(root));

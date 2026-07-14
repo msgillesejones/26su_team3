@@ -32,6 +32,7 @@ public class ReservationController {
         }
 
         reservations.add(reservation);
+        persistence.saveReservations(reservations);
         return true;
     }
     public java.util.List<ReservationRecord> getReservations() {

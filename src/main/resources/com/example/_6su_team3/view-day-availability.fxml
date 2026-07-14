@@ -6,6 +6,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
 
 <VBox spacing="10" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -18,6 +20,12 @@
     <DatePicker fx:id="datePicker" />
 
     <Button text="Load Availability" onAction="#loadAvailability" />
+    <TextField fx:id="userNameField" promptText="Enter user name" />
+
+    <Button text="Reserve Selected Time"
+            onAction="#createReservation" />
+
+    <Label fx:id="messageLabel" text="" />
 
     <TableView fx:id="scheduleTable">
         <columns>

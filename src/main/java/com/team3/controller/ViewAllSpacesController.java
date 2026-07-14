@@ -12,6 +12,8 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 public class ViewAllSpacesController {
+    private final ReservationController reservationController =
+            new ReservationController();
 
     @FXML
     private javafx.scene.control.TextField capacityFilterField;
@@ -154,8 +156,32 @@ public class ViewAllSpacesController {
             DayAvailabilityController controller = loader.getController();
             controller.setSpace(selected);
 
+            controller.setReservationController(reservationController);
+
             Stage stage = new Stage();
             stage.setTitle("Day Availability");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void openMyReservations() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/com/example/_6su_team3/view-my-reservations.fxml"
+                    )
+            );
+
+            Parent root = loader.load();
+
+            MyReservationsController controller = loader.getController();
+            controller.setReservationController(reservationController);
+
+            Stage stage = new Stage();
+            stage.setTitle("My Reservations");
             stage.setScene(new Scene(root));
             stage.show();
 

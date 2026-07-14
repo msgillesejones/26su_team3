@@ -1,11 +1,17 @@
 package com.team3.controller;
 
+import com.team3.persistence.ReservationPersistence;
 import com.team3.model.ReservationRecord;
 
 public class ReservationController {
     private final java.util.List<ReservationRecord> reservations =
             new java.util.ArrayList<>();
+
+    private final ReservationPersistence persistence =
+            new ReservationPersistence();
+
     public ReservationController() {
+        reservations.addAll(persistence.loadReservations());
     }
     public boolean addReservation(ReservationRecord reservation) {
         if (!isValidTimeRange(

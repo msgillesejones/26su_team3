@@ -19,6 +19,7 @@
 
             <!-- ⭐⭐ NEW BUTTON ⭐⭐ -->
             <Button text="View Day Availability" onAction="#openDayAvailability" />
+            <Button text="My Reservations" onAction="#openMyReservations" />
 
         </HBox>
     </top>

@@ -52,6 +52,20 @@ public class DayAvailabilityController {
         statusColumn.setCellValueFactory(data ->
             new SimpleStringProperty(data.getValue().getStatus())
         );
+        scheduleTable.setRowFactory(tableView -> new javafx.scene.control.TableRow<TimeSlot>() {
+            @Override
+            protected void updateItem(TimeSlot timeSlot, boolean empty) {
+                super.updateItem(timeSlot, empty);
+
+                if (empty || timeSlot == null) {
+                    setStyle("");
+                } else if ("Reserved".equals(timeSlot.getStatus())) {
+                    setStyle("-fx-background-color: lightcoral;");
+                } else {
+                    setStyle("-fx-background-color: lightgreen;");
+                }
+            }
+        });
     }
 
     public void loadAvailability() {

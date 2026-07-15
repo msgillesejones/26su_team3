@@ -11,7 +11,13 @@ public class ReservationController {
             new ReservationPersistence();
 
     public ReservationController() {
-        reservations.addAll(persistence.loadReservations());
+        this(true);
+    }
+
+    public ReservationController(boolean persistenceEnabled) {
+        if (persistenceEnabled) {
+            reservations.addAll(persistence.loadReservations());
+        }
     }
     public boolean addReservation(ReservationRecord reservation) {
         if (!isValidTimeRange(
@@ -57,7 +63,13 @@ public class ReservationController {
         return userReservations;
     }
     public boolean cancelReservation(ReservationRecord reservation) {
-        return reservations.remove(reservation);
+        boolean removed = reservations.remove(reservation);
+
+        if (removed) {
+            persistence.saveReservations(reservations);
+        }
+
+        return removed;
     }
     public boolean modifyReservation(ReservationRecord oldReservation,
                                      ReservationRecord newReservation) {
@@ -89,6 +101,7 @@ public class ReservationController {
         }
 
         reservations.add(index, newReservation);
+        persistence.saveReservations(reservations);
         return true;
     }
     public boolean isAvailable(String spaceName, String date, String startTime, String endTime) {

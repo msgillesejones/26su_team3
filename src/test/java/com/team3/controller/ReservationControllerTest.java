@@ -11,7 +11,7 @@ public class ReservationControllerTest {
 
     @Test
     public void validReservationCanBeAdded() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord reservation = new ReservationRecord(
                 "Study Room",
@@ -27,7 +27,7 @@ public class ReservationControllerTest {
     }
     @Test
     public void reservationOverTwoHoursIsRejected() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord reservation = new ReservationRecord(
                 "Study Room",
@@ -43,7 +43,7 @@ public class ReservationControllerTest {
     }
     @Test
     public void overlappingReservationIsRejected() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord firstReservation = new ReservationRecord(
                 "Study Room",
@@ -69,7 +69,7 @@ public class ReservationControllerTest {
     }
     @Test
     public void endTimeBeforeStartTimeIsRejected() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord reservation = new ReservationRecord(
                 "Study Room",
@@ -85,7 +85,7 @@ public class ReservationControllerTest {
     }
     @Test
     public void reservationWithinTenMinuteBufferIsRejected() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord firstReservation = new ReservationRecord(
                 "Study Room",
@@ -111,7 +111,7 @@ public class ReservationControllerTest {
     }
     @Test
     public void onlyUsersReservationsAreReturned() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord gilleseReservation = new ReservationRecord(
                 "Study Room",
@@ -140,7 +140,7 @@ public class ReservationControllerTest {
     }
     @Test
     public void userReservationsAreSortedByDateAndStartTime() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord laterReservation = new ReservationRecord(
                 "Auditorium",
@@ -169,7 +169,7 @@ public class ReservationControllerTest {
     }
     @Test
     public void reservationCanBeCancelled() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord reservation = new ReservationRecord(
                 "Study Room",
@@ -188,7 +188,7 @@ public class ReservationControllerTest {
     }
     @Test
     public void reservationCanBeModified() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord originalReservation = new ReservationRecord(
                 "Study Room",
@@ -221,7 +221,7 @@ public class ReservationControllerTest {
     }
     @Test
     public void invalidReservationModificationIsRejected() {
-        ReservationController controller = new ReservationController();
+        ReservationController controller = new ReservationController(false);
 
         ReservationRecord originalReservation = new ReservationRecord(
                 "Study Room",

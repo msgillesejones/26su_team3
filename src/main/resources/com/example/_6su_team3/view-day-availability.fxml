@@ -20,6 +20,9 @@
     <DatePicker fx:id="datePicker" />
 
     <Button text="Load Availability" onAction="#loadAvailability" />
+    <Button text="Suggest Available Times"
+            onAction="#suggestTimes" />
+
     <TextField fx:id="userNameField" promptText="Enter user name" />
 
     <Button text="Reserve Selected Time"

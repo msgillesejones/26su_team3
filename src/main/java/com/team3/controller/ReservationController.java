@@ -147,4 +147,29 @@ public class ReservationController {
             return false;
         }
     }
+
+    // US12 Suggest Times - returns available one-hour reservation times for a space and date.
+    public java.util.List<String> suggestAvailableTimes(String spaceName, String date) {
+        java.util.List<String> suggestedTimes = new java.util.ArrayList<>();
+
+        java.time.LocalTime openingTime = java.time.LocalTime.of(8, 0);
+        java.time.LocalTime closingTime = java.time.LocalTime.of(18, 0);
+
+        java.time.LocalTime startTime = openingTime;
+
+        while (!startTime.plusHours(1).isAfter(closingTime)) {
+            java.time.LocalTime endTime = startTime.plusHours(1);
+
+            String start = startTime.toString();
+            String end = endTime.toString();
+
+            if (isAvailable(spaceName, date, start, end)) {
+                suggestedTimes.add(start + " - " + end);
+            }
+
+            startTime = startTime.plusHours(1);
+        }
+
+        return suggestedTimes;
+    }
 }

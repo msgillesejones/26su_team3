@@ -1,0 +1,62 @@
+package com.team3.controller;
+
+import com.team3.model.ReservationRecord;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class ReservationIntegrationTest {
+
+    // US8 Create Reservation - Acceptance Test: valid reservation is created successfully.
+    @Test
+    public void createReservationIntegrationTest() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord reservation = new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-20",
+                "10:00",
+                "11:00"
+        );
+
+        boolean created = controller.addReservation(reservation);
+
+        assertTrue(created);
+        assertEquals(1, controller.getReservations().size());
+    }
+
+    // US9 View My Reservations - Acceptance Test: only the selected user's reservations are displayed.
+    @Test
+    public void viewUserReservationsIntegrationTest() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord gilleseReservation = new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-20",
+                "10:00",
+                "11:00"
+        );
+
+        ReservationRecord jessicaReservation = new ReservationRecord(
+                "Auditorium",
+                "Jessica",
+                "2026-07-21",
+                "12:00",
+                "13:00"
+        );
+
+        controller.addReservation(gilleseReservation);
+        controller.addReservation(jessicaReservation);
+
+        List<ReservationRecord> results =
+                controller.getReservationsForUser("Gillese");
+
+        assertEquals(1, results.size());
+        assertEquals("Gillese", results.get(0).getUserName());
+    }
+}

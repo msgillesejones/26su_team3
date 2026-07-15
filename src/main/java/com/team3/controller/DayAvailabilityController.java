@@ -145,4 +145,25 @@ public class DayAvailabilityController {
             messageLabel.setText("Unable to create reservation.");
         }
     }
+
+    public void suggestTimes() {
+        if (datePicker.getValue() == null) {
+            messageLabel.setText("Please select a date.");
+            return;
+        }
+
+        java.util.List<String> suggestedTimes =
+                reservationController.suggestAvailableTimes(
+                        selectedSpace.getName(),
+                        datePicker.getValue().toString()
+                );
+
+        if (suggestedTimes.isEmpty()) {
+            messageLabel.setText("No available times found.");
+        } else {
+            messageLabel.setText(
+                    "Suggested times: " + String.join(", ", suggestedTimes)
+            );
+        }
+    }
 }

@@ -252,4 +252,25 @@ public class ReservationControllerTest {
                 controller.getReservations().get(0).getStartTime()
         );
     }
+
+    @Test
+    public void availableTimesAreSuggested() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord reservation = new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-20",
+                "10:00",
+                "11:00"
+        );
+
+        controller.addReservation(reservation);
+
+        java.util.List<String> suggestions =
+                controller.suggestAvailableTimes("Study Room", "2026-07-20");
+
+        assertFalse(suggestions.contains("10:00 - 11:00"));
+        assertTrue(suggestions.contains("08:00 - 09:00"));
+    }
 }

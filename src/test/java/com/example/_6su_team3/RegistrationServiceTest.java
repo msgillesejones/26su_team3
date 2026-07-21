@@ -16,7 +16,7 @@ class RegistrationServiceTest {
 
     @Test
     void registerCreatesUserWithValidInformation() {
-        User user = service.register("gillese", "password123", false);
+        User user = service.register("gillese", "password123");
 
         assertNotNull(user);
         assertEquals("gillese", user.getUsername());
@@ -29,7 +29,7 @@ class RegistrationServiceTest {
     void registerRejectsMissingUsername() {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.register("", "password123", false)
+                () -> service.register("", "password123")
         );
 
         assertEquals("Username is required", exception.getMessage());
@@ -39,7 +39,7 @@ class RegistrationServiceTest {
     void registerRejectsBlankUsername() {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.register("   ", "password123", false)
+                () -> service.register("   ", "password123")
         );
 
         assertEquals("Username is required", exception.getMessage());
@@ -49,7 +49,7 @@ class RegistrationServiceTest {
     void registerRejectsMissingPassword() {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.register("gillese", "", false)
+                () -> service.register("gillese", "")
         );
 
         assertEquals("Password is required", exception.getMessage());
@@ -59,7 +59,7 @@ class RegistrationServiceTest {
     void registerRejectsPasswordShorterThanSixCharacters() {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.register("gillese", "12345", false)
+                () -> service.register("gillese", "12345")
         );
 
         assertEquals(
@@ -70,7 +70,7 @@ class RegistrationServiceTest {
 
     @Test
     void registerAcceptsPasswordWithExactlySixCharacters() {
-        User user = service.register("gillese", "123456", false);
+        User user = service.register("gillese", "123456");
 
         assertNotNull(user);
         assertTrue(service.userExists("gillese"));
@@ -78,13 +78,23 @@ class RegistrationServiceTest {
 
     @Test
     void registerRejectsDuplicateUsername() {
-        service.register("gillese", "password123", false);
+        service.register("gillese", "password123");
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> service.register("gillese", "anotherPassword", false)
+                () -> service.register("gillese", "anotherPassword")
         );
 
         assertEquals("Username already exists", exception.getMessage());
+    }
+
+    @Test
+    void defaultAdministratorExists() {
+        User administrator = service.getUser("admin");
+
+        assertNotNull(administrator);
+        assertEquals("admin", administrator.getUsername());
+        assertEquals("admin123", administrator.getPassword());
+        assertTrue(administrator.isAdmin());
     }
 }

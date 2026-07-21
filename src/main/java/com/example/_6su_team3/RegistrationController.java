@@ -1,16 +1,23 @@
 package com.example._6su_team3;
 
-
 public class RegistrationController {
 
-    private RegistrationService service = new RegistrationService();
+    private final RegistrationService service;
 
-    public String registerUser(String username, String password, boolean isAdmin) {
+    public RegistrationController() {
+        this(new RegistrationService());
+    }
+
+    public RegistrationController(RegistrationService service) {
+        this.service = service;
+    }
+
+    public String registerUser(String username, String password) {
         try {
-            service.register(username, password, isAdmin);
+            service.register(username, password);
             return "SUCCESS";
-        } catch (IllegalArgumentException e) {
-            return e.getMessage();
+        } catch (IllegalArgumentException exception) {
+            return exception.getMessage();
         }
     }
 }

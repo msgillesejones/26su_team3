@@ -1,27 +1,40 @@
 package com.example._6su_team3;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class RegistrationService {
 
-    private HashMap<String, User> users = new HashMap<>();
+    private final Map<String, User> users = new HashMap<>();
 
-    public User register(String username, String password, boolean isAdmin) {
+    public RegistrationService() {
+        // US-13 requires at least one administrator account.
+        users.put("admin", new User("admin", "admin123", true));
+    }
 
-        // Missing fields
-        if (username == null || username.isBlank()) {
+    /**
+     * Registers a normal system user.
+     * Public registration must not create administrators.
+     */
+    public User register(String username, String password) {
+        return createUser(username, password, false);
+    }
+
+    private User createUser(String username, String password, boolean isAdmin) {
+        if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username is required");
         }
-        if (password == null || password.isBlank()) {
+
+        if (password == null || password.trim().isEmpty()) {
             throw new IllegalArgumentException("Password is required");
         }
 
-        // Minimum password length
         if (password.length() < 6) {
-            throw new IllegalArgumentException("Password must be at least 6 characters");
+            throw new IllegalArgumentException(
+                    "Password must be at least 6 characters"
+            );
         }
 
-        // Duplicate usernames
         if (users.containsKey(username)) {
             throw new IllegalArgumentException("Username already exists");
         }
@@ -33,5 +46,9 @@ public class RegistrationService {
 
     public boolean userExists(String username) {
         return users.containsKey(username);
+    }
+
+    public User getUser(String username) {
+        return users.get(username);
     }
 }

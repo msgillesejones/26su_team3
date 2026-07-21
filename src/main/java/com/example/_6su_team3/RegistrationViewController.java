@@ -33,4 +33,25 @@ public class RegistrationViewController {
             passwordField.clear();
         }
     }
+    @FXML
+    private void handleLogin() {
+
+        String result = controller.loginUser(
+                usernameField.getText(),
+                passwordField.getText()
+        );
+
+        messageLabel.setText(result);
+
+        if ("SUCCESS".equals(result)) {
+            usernameField.clear();
+            passwordField.clear();
+        }
+    }
+
+    @FXML
+    private void handleLogout() {
+        controller.logoutUser();
+        messageLabel.setText("Logged out successfully.");
+    }
 }

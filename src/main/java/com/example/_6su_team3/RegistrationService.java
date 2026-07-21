@@ -56,5 +56,23 @@ public class RegistrationService {
             throw new SecurityException("Access denied. Administrator privileges required.");
         }
     }
+    public User login(String username, String password) {
+        User user = users.get(username);
 
+        if (user == null || !user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Invalid username or password");
+        }
+
+        return user;
+    }
+
+    public User login(
+            String username,
+            String password,
+            SessionManager sessionManager
+    ) {
+        User user = login(username, password);
+        sessionManager.login(user);
+        return user;
+    }
 }

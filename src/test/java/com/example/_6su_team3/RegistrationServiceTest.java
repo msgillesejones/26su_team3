@@ -97,4 +97,42 @@ class RegistrationServiceTest {
         assertEquals("admin123", administrator.getPassword());
         assertTrue(administrator.isAdmin());
     }
+    @Test
+    void loginReturnsUserWithValidCredentials() {
+        service.register("gillese", "password123");
+
+        User user = service.login("gillese", "password123");
+
+        assertNotNull(user);
+        assertEquals("gillese", user.getUsername());
+    }
+
+    @Test
+    void loginRejectsInvalidCredentials() {
+        service.register("gillese", "password123");
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.login("gillese", "wrongPassword")
+        );
+
+        assertEquals(
+                "Invalid username or password",
+                exception.getMessage()
+        );
+    }
+    @Test
+    void loginStoresUserInSession() {
+        service.register("gillese", "password123");
+        SessionManager sessionManager = new SessionManager();
+
+        User user = service.login(
+                "gillese",
+                "password123",
+                sessionManager
+        );
+
+        assertTrue(sessionManager.isLoggedIn());
+        assertEquals(user, sessionManager.getCurrentUser());
+    }
 }

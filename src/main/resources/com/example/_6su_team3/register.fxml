@@ -33,6 +33,14 @@
             onAction="#handleRegister"
             maxWidth="250"/>
 
+    <Button text="Login"
+            onAction="#handleLogin"
+            maxWidth="250"/>
+
+    <Button text="Logout"
+            onAction="#handleLogout"
+            maxWidth="250"/>
+
     <Label fx:id="messageLabel"
            wrapText="true"
            maxWidth="250"/>

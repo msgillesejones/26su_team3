@@ -104,6 +104,16 @@ public class ReservationController {
 
         return modifyReservation(oldReservation, newReservation);
     }
+    public boolean adminCancelReservation(
+            ReservationRecord reservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return cancelReservation(reservation);
+    }
     public boolean modifyReservation(ReservationRecord oldReservation,
                                      ReservationRecord newReservation) {
         int index = reservations.indexOf(oldReservation);

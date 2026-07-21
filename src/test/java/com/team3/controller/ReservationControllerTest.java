@@ -449,4 +449,48 @@ public class ReservationControllerTest {
                 controller.getReservations().get(0).getStartTime()
         );
     }
+    @Test
+    public void adminCanCancelAnotherUsersReservation() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord reservation = new ReservationRecord(
+                "Study Room",
+                "Jessica",
+                "2026-07-24",
+                "10:00",
+                "11:00"
+        );
+
+        controller.addReservation(reservation);
+
+        boolean cancelled = controller.adminCancelReservation(
+                reservation,
+                true
+        );
+
+        assertTrue(cancelled);
+        assertEquals(0, controller.getReservations().size());
+    }
+    @Test
+    public void nonAdminCannotCancelAnotherUsersReservation() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord reservation = new ReservationRecord(
+                "Study Room",
+                "Jessica",
+                "2026-07-24",
+                "10:00",
+                "11:00"
+        );
+
+        controller.addReservation(reservation);
+
+        boolean cancelled = controller.adminCancelReservation(
+                reservation,
+                false
+        );
+
+        assertFalse(cancelled);
+        assertEquals(1, controller.getReservations().size());
+    }
 }

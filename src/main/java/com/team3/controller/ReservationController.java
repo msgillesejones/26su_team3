@@ -19,6 +19,16 @@ public class ReservationController {
             reservations.addAll(persistence.loadReservations());
         }
     }
+    public boolean adminCreateReservation(
+            ReservationRecord reservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return addReservation(reservation);
+    }
     public boolean addReservation(ReservationRecord reservation) {
         if (!isValidTimeRange(
                 reservation.getStartTime(),

@@ -341,4 +341,44 @@ public class ReservationControllerTest {
                 controller.getReservations().get(0).getStartTime()
         );
     }
+    @Test
+    public void adminCanCreateReservationForAnotherUser() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord reservation = new ReservationRecord(
+                "Study Room",
+                "Jessica",
+                "2026-07-22",
+                "10:00",
+                "11:00"
+        );
+
+        boolean created = controller.adminCreateReservation(
+                reservation,
+                true
+        );
+
+        assertTrue(created);
+        assertEquals(1, controller.getReservationsForUser("Jessica").size());
+    }
+    @Test
+    public void nonAdminCannotCreateReservationForAnotherUser() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord reservation = new ReservationRecord(
+                "Study Room",
+                "Jessica",
+                "2026-07-22",
+                "10:00",
+                "11:00"
+        );
+
+        boolean created = controller.adminCreateReservation(
+                reservation,
+                false
+        );
+
+        assertFalse(created);
+        assertEquals(0, controller.getReservations().size());
+    }
 }

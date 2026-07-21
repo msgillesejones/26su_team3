@@ -19,6 +19,16 @@ public class ReservationController {
             reservations.addAll(persistence.loadReservations());
         }
     }
+    public boolean adminCreateReservation(
+            ReservationRecord reservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return addReservation(reservation);
+    }
     public boolean addReservation(ReservationRecord reservation) {
         if (!isValidTimeRange(
                 reservation.getStartTime(),
@@ -70,6 +80,29 @@ public class ReservationController {
         }
 
         return removed;
+    }
+    public boolean modifyReservationForUser(
+            ReservationRecord oldReservation,
+            ReservationRecord newReservation,
+            String loggedInUserName
+    ) {
+        if (loggedInUserName == null
+                || !oldReservation.matchesUser(loggedInUserName)) {
+            return false;
+        }
+
+        return modifyReservation(oldReservation, newReservation);
+    }
+    public boolean adminModifyReservation(
+            ReservationRecord oldReservation,
+            ReservationRecord newReservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return modifyReservation(oldReservation, newReservation);
     }
     public boolean modifyReservation(ReservationRecord oldReservation,
                                      ReservationRecord newReservation) {

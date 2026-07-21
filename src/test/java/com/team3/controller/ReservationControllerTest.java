@@ -381,4 +381,72 @@ public class ReservationControllerTest {
         assertFalse(created);
         assertEquals(0, controller.getReservations().size());
     }
+    @Test
+    public void adminCanModifyAnotherUsersReservation() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord originalReservation = new ReservationRecord(
+                "Study Room",
+                "Jessica",
+                "2026-07-23",
+                "10:00",
+                "11:00"
+        );
+
+        ReservationRecord updatedReservation = new ReservationRecord(
+                "Study Room",
+                "Jessica",
+                "2026-07-23",
+                "12:00",
+                "13:00"
+        );
+
+        controller.addReservation(originalReservation);
+
+        boolean modified = controller.adminModifyReservation(
+                originalReservation,
+                updatedReservation,
+                true
+        );
+
+        assertTrue(modified);
+        assertEquals(
+                "12:00",
+                controller.getReservations().get(0).getStartTime()
+        );
+    }
+    @Test
+    public void nonAdminCannotModifyAnotherUsersReservation() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord originalReservation = new ReservationRecord(
+                "Study Room",
+                "Jessica",
+                "2026-07-23",
+                "10:00",
+                "11:00"
+        );
+
+        ReservationRecord updatedReservation = new ReservationRecord(
+                "Study Room",
+                "Jessica",
+                "2026-07-23",
+                "12:00",
+                "13:00"
+        );
+
+        controller.addReservation(originalReservation);
+
+        boolean modified = controller.adminModifyReservation(
+                originalReservation,
+                updatedReservation,
+                false
+        );
+
+        assertFalse(modified);
+        assertEquals(
+                "10:00",
+                controller.getReservations().get(0).getStartTime()
+        );
+    }
 }

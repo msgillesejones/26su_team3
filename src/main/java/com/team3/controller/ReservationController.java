@@ -93,6 +93,17 @@ public class ReservationController {
 
         return modifyReservation(oldReservation, newReservation);
     }
+    public boolean adminModifyReservation(
+            ReservationRecord oldReservation,
+            ReservationRecord newReservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return modifyReservation(oldReservation, newReservation);
+    }
     public boolean modifyReservation(ReservationRecord oldReservation,
                                      ReservationRecord newReservation) {
         int index = reservations.indexOf(oldReservation);

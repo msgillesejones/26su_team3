@@ -36,5 +36,13 @@ public class RegistrationController {
     public boolean isUserLoggedIn() {
         return sessionManager.isLoggedIn();
     }
+    public String accessAdminFeature() {
+        try {
+            service.requireAdmin(sessionManager.getCurrentUser());
+            return "ADMIN ACCESS GRANTED";
+        } catch (SecurityException exception) {
+            return exception.getMessage();
+        }
+    }
 }
 

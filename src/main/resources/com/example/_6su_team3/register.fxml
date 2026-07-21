@@ -41,6 +41,10 @@
             onAction="#handleLogout"
             maxWidth="250"/>
 
+    <Button text="Admin Feature"
+            onAction="#handleAdminFeature"
+            maxWidth="250"/>
+
     <Label fx:id="messageLabel"
            wrapText="true"
            maxWidth="250"/>

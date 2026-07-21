@@ -54,4 +54,9 @@ public class RegistrationViewController {
         controller.logoutUser();
         messageLabel.setText("Logged out successfully.");
     }
+    @FXML
+    private void handleAdminFeature() {
+        String result = controller.accessAdminFeature();
+        messageLabel.setText(result);
+    }
 }

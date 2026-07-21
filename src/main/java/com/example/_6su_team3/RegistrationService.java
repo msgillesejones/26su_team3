@@ -1,5 +1,6 @@
 package com.example._6su_team3;
 
+import com.team3.persistence.RegistrationPersistence;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,9 +8,22 @@ public class RegistrationService {
 
     private final Map<String, User> users = new HashMap<>();
 
+    private final RegistrationPersistence persistence;
+
     public RegistrationService() {
-        // US-13 requires at least one administrator account.
-        users.put("admin", new User("admin", "admin123", true));
+        this(new RegistrationPersistence());
+    }
+
+    public RegistrationService(RegistrationPersistence persistence) {
+        this.persistence = persistence;
+
+        for (User user : persistence.loadUsers()) {
+            users.put(user.getUsername(), user);
+        }
+
+        if (!users.containsKey("admin")) {
+            users.put("admin", new User("admin", "admin123", true));
+        }
     }
 
     /**
@@ -41,6 +55,11 @@ public class RegistrationService {
 
         User newUser = new User(username, password, isAdmin);
         users.put(username, newUser);
+
+        persistence.saveUsers(
+                new java.util.ArrayList<>(users.values())
+        );
+
         return newUser;
     }
 

@@ -2,6 +2,7 @@ package com.example._6su_team3;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.team3.persistence.RegistrationPersistence;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +12,12 @@ class RegistrationServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new RegistrationService();
+        String testFileName =
+                "test-users-" + System.nanoTime() + ".json";
+
+        service = new RegistrationService(
+                new RegistrationPersistence(testFileName)
+        );
     }
 
     @Test
@@ -134,5 +140,37 @@ class RegistrationServiceTest {
 
         assertTrue(sessionManager.isLoggedIn());
         assertEquals(user, sessionManager.getCurrentUser());
+    }
+    @Test
+    void registeredUsersAreLoadedAfterRestart() {
+        String testFileName =
+                "persist-users-" + System.nanoTime() + ".json";
+
+        RegistrationPersistence persistence =
+                new RegistrationPersistence(testFileName);
+
+        RegistrationService firstService =
+                new RegistrationService(persistence);
+
+        firstService.register("testuser", "password123");
+
+        RegistrationService secondService =
+                new RegistrationService(persistence);
+
+        assertTrue(secondService.userExists("testuser"));
+    }
+    @Test
+    void noSavedUsersLoadsOnlyDefaultAdministrator() {
+        String testFileName =
+                "empty-users-" + System.nanoTime() + ".json";
+
+        RegistrationPersistence persistence =
+                new RegistrationPersistence(testFileName);
+
+        RegistrationService restartedService =
+                new RegistrationService(persistence);
+
+        assertNotNull(restartedService.getUser("admin"));
+        assertFalse(restartedService.userExists("testuser"));
     }
 }

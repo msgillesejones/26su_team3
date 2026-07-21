@@ -2,6 +2,7 @@ package com.example._6su_team3;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.team3.persistence.RegistrationPersistence;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +13,13 @@ class RegistrationIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        service = new RegistrationService();
+        String testFileName =
+                "integration-users-" + System.nanoTime() + ".json";
+
+        service = new RegistrationService(
+                new RegistrationPersistence(testFileName)
+        );
+
         controller = new RegistrationController(service);
     }
 

@@ -273,4 +273,72 @@ public class ReservationControllerTest {
         assertFalse(suggestions.contains("10:00 - 11:00"));
         assertTrue(suggestions.contains("08:00 - 09:00"));
     }
+    @Test
+    public void ownerCanModifyOwnReservation() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord originalReservation = new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-12",
+                "10:00",
+                "11:00"
+        );
+
+        ReservationRecord updatedReservation = new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-12",
+                "12:00",
+                "13:00"
+        );
+
+        controller.addReservation(originalReservation);
+
+        boolean modified = controller.modifyReservationForUser(
+                originalReservation,
+                updatedReservation,
+                "Gillese"
+        );
+
+        assertTrue(modified);
+        assertEquals(
+                "12:00",
+                controller.getReservations().get(0).getStartTime()
+        );
+    }
+    @Test
+    public void nonOwnerCannotModifyReservation() {
+        ReservationController controller = new ReservationController(false);
+
+        ReservationRecord originalReservation = new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-12",
+                "10:00",
+                "11:00"
+        );
+
+        ReservationRecord updatedReservation = new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-12",
+                "12:00",
+                "13:00"
+        );
+
+        controller.addReservation(originalReservation);
+
+        boolean modified = controller.modifyReservationForUser(
+                originalReservation,
+                updatedReservation,
+                "Jessica"
+        );
+
+        assertFalse(modified);
+        assertEquals(
+                "10:00",
+                controller.getReservations().get(0).getStartTime()
+        );
+    }
 }

@@ -71,6 +71,18 @@ public class ReservationController {
 
         return removed;
     }
+    public boolean modifyReservationForUser(
+            ReservationRecord oldReservation,
+            ReservationRecord newReservation,
+            String loggedInUserName
+    ) {
+        if (loggedInUserName == null
+                || !oldReservation.matchesUser(loggedInUserName)) {
+            return false;
+        }
+
+        return modifyReservation(oldReservation, newReservation);
+    }
     public boolean modifyReservation(ReservationRecord oldReservation,
                                      ReservationRecord newReservation) {
         int index = reservations.indexOf(oldReservation);

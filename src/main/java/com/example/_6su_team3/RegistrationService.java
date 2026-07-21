@@ -51,4 +51,10 @@ public class RegistrationService {
     public User getUser(String username) {
         return users.get(username);
     }
+    public void requireAdmin(User user) {
+        if (user == null || !user.isAdmin()) {
+            throw new SecurityException("Access denied. Administrator privileges required.");
+        }
+    }
+
 }

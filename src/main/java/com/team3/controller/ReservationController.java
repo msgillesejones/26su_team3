@@ -7,17 +7,39 @@ public class ReservationController {
     private final java.util.List<ReservationRecord> reservations =
             new java.util.ArrayList<>();
 
-    private final ReservationPersistence persistence =
-            new ReservationPersistence();
+    private final ReservationPersistence persistence;
 
     public ReservationController() {
-        this(true);
+        this(new ReservationPersistence(), true);
     }
 
     public ReservationController(boolean persistenceEnabled) {
+        this(new ReservationPersistence(), persistenceEnabled);
+    }
+
+    public ReservationController(ReservationPersistence persistence) {
+        this(persistence, true);
+    }
+
+    public ReservationController(
+            ReservationPersistence persistence,
+            boolean persistenceEnabled
+    ) {
+        this.persistence = persistence;
+
         if (persistenceEnabled) {
             reservations.addAll(persistence.loadReservations());
         }
+    }
+    public boolean adminCreateReservation(
+            ReservationRecord reservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return addReservation(reservation);
     }
     public boolean addReservation(ReservationRecord reservation) {
         if (!isValidTimeRange(
@@ -70,6 +92,39 @@ public class ReservationController {
         }
 
         return removed;
+    }
+    public boolean modifyReservationForUser(
+            ReservationRecord oldReservation,
+            ReservationRecord newReservation,
+            String loggedInUserName
+    ) {
+        if (loggedInUserName == null
+                || !oldReservation.matchesUser(loggedInUserName)) {
+            return false;
+        }
+
+        return modifyReservation(oldReservation, newReservation);
+    }
+    public boolean adminModifyReservation(
+            ReservationRecord oldReservation,
+            ReservationRecord newReservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return modifyReservation(oldReservation, newReservation);
+    }
+    public boolean adminCancelReservation(
+            ReservationRecord reservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return cancelReservation(reservation);
     }
     public boolean modifyReservation(ReservationRecord oldReservation,
                                      ReservationRecord newReservation) {

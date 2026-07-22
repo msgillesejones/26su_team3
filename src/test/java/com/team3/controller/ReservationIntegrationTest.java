@@ -165,4 +165,40 @@ public class ReservationIntegrationTest {
         assertEquals("2026-07-23", results.get(1).getDate());
         assertEquals("Jessica", results.get(1).getUserName());
     }
+    // US24 Usage Report - Acceptance Test
+    @Test
+    public void usageReportIntegrationTest() {
+        ReservationController controller = new ReservationController(false);
+
+        controller.addReservation(new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-22",
+                "10:00",
+                "11:00"
+        ));
+
+        controller.addReservation(new ReservationRecord(
+                "Study Room",
+                "Jessica",
+                "2026-07-23",
+                "12:00",
+                "13:00"
+        ));
+
+        controller.addReservation(new ReservationRecord(
+                "Auditorium",
+                "Skylar",
+                "2026-07-24",
+                "09:00",
+                "10:00"
+        ));
+
+        java.util.Map<String, Integer> report =
+                controller.getUsageReport();
+
+        assertEquals(1, report.get("Auditorium"));
+        assertEquals(0, report.get("Conference Room"));
+        assertEquals(2, report.get("Study Room"));
+    }
 }

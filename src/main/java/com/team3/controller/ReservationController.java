@@ -219,6 +219,26 @@ public class ReservationController {
         return allReservations;
     }
 
+    // US24 Usage Report - counts reservations for each known space.
+    public java.util.Map<String, Integer> getUsageReport() {
+        java.util.Map<String, Integer> usageReport = new java.util.TreeMap<>();
+
+        usageReport.put("Auditorium", 0);
+        usageReport.put("Conference Room", 0);
+        usageReport.put("Study Room", 0);
+
+        for (ReservationRecord reservation : reservations) {
+            String spaceName = reservation.getSpaceName();
+
+            usageReport.put(
+                    spaceName,
+                    usageReport.getOrDefault(spaceName, 0) + 1
+            );
+        }
+
+        return usageReport;
+    }
+
     // US22 Daily Summary - groups reservation counts by date in chronological order.
     public Map<String, Integer> getDailySummary() {
         Map<String, Integer> dailySummary = new TreeMap<>();

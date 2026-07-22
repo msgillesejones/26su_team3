@@ -1,5 +1,8 @@
 package com.team3.controller;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import com.team3.persistence.ReservationPersistence;
 import com.team3.model.ReservationRecord;
 
@@ -201,6 +204,22 @@ public class ReservationController {
         } catch (java.time.format.DateTimeParseException e) {
             return false;
         }
+    }
+
+    // US22 Daily Summary - groups reservation counts by date in chronological order.
+    public Map<String, Integer> getDailySummary() {
+        Map<String, Integer> dailySummary = new TreeMap<>();
+
+        for (ReservationRecord reservation : reservations) {
+            String date = reservation.getDate();
+
+            dailySummary.put(
+                    date,
+                    dailySummary.getOrDefault(date, 0) + 1
+            );
+        }
+
+        return dailySummary;
     }
 
     // US12 Suggest Times - returns available one-hour reservation times for a space and date.

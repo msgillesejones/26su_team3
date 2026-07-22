@@ -201,4 +201,43 @@ public class ReservationIntegrationTest {
         assertEquals(0, report.get("Conference Room"));
         assertEquals(2, report.get("Study Room"));
     }
+    // US25 Filter Reports - Acceptance Test
+    @Test
+    public void filterReportsByDateRangeIntegrationTest() {
+        ReservationController controller = new ReservationController(false);
+
+        controller.addReservation(new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-22",
+                "10:00",
+                "11:00"
+        ));
+
+        controller.addReservation(new ReservationRecord(
+                "Conference Room",
+                "Skylar",
+                "2026-07-23",
+                "12:00",
+                "13:00"
+        ));
+
+        controller.addReservation(new ReservationRecord(
+                "Auditorium",
+                "Alex",
+                "2026-07-24",
+                "09:00",
+                "10:00"
+        ));
+
+        java.util.List<ReservationRecord> results =
+                controller.getReservationsByDateRange(
+                        "2026-07-22",
+                        "2026-07-23"
+                );
+
+        assertEquals(2, results.size());
+        assertEquals("2026-07-22", results.get(0).getDate());
+        assertEquals("2026-07-23", results.get(1).getDate());
+    }
 }

@@ -219,6 +219,47 @@ public class ReservationController {
         return allReservations;
     }
 
+    // US25 Filter Reports - returns reservations within an inclusive date range.
+    public java.util.List<ReservationRecord> getReservationsByDateRange(
+            String startDate,
+            String endDate
+    ) {
+        java.time.LocalDate start;
+        java.time.LocalDate end;
+
+        try {
+            start = java.time.LocalDate.parse(startDate);
+            end = java.time.LocalDate.parse(endDate);
+        } catch (java.time.format.DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid date.");
+        }
+
+        if (end.isBefore(start)) {
+            throw new IllegalArgumentException("Invalid date range.");
+        }
+
+        java.util.List<ReservationRecord> filteredReservations =
+                new java.util.ArrayList<>();
+
+        for (ReservationRecord reservation : reservations) {
+            java.time.LocalDate reservationDate =
+                    java.time.LocalDate.parse(reservation.getDate());
+
+            if (!reservationDate.isBefore(start)
+                    && !reservationDate.isAfter(end)) {
+                filteredReservations.add(reservation);
+            }
+        }
+
+        filteredReservations.sort(
+                java.util.Comparator
+                        .comparing(ReservationRecord::getDate)
+                        .thenComparing(ReservationRecord::getStartTime)
+        );
+
+        return filteredReservations;
+    }
+
     // US24 Usage Report - counts reservations for each known space.
     public java.util.Map<String, Integer> getUsageReport() {
         java.util.Map<String, Integer> usageReport = new java.util.TreeMap<>();

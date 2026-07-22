@@ -1,5 +1,8 @@
 package com.team3.controller;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import com.team3.persistence.ReservationPersistence;
 import com.team3.model.ReservationRecord;
 
@@ -7,17 +10,39 @@ public class ReservationController {
     private final java.util.List<ReservationRecord> reservations =
             new java.util.ArrayList<>();
 
-    private final ReservationPersistence persistence =
-            new ReservationPersistence();
+    private final ReservationPersistence persistence;
 
     public ReservationController() {
-        this(true);
+        this(new ReservationPersistence(), true);
     }
 
     public ReservationController(boolean persistenceEnabled) {
+        this(new ReservationPersistence(), persistenceEnabled);
+    }
+
+    public ReservationController(ReservationPersistence persistence) {
+        this(persistence, true);
+    }
+
+    public ReservationController(
+            ReservationPersistence persistence,
+            boolean persistenceEnabled
+    ) {
+        this.persistence = persistence;
+
         if (persistenceEnabled) {
             reservations.addAll(persistence.loadReservations());
         }
+    }
+    public boolean adminCreateReservation(
+            ReservationRecord reservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return addReservation(reservation);
     }
     public boolean addReservation(ReservationRecord reservation) {
         if (!isValidTimeRange(
@@ -70,6 +95,39 @@ public class ReservationController {
         }
 
         return removed;
+    }
+    public boolean modifyReservationForUser(
+            ReservationRecord oldReservation,
+            ReservationRecord newReservation,
+            String loggedInUserName
+    ) {
+        if (loggedInUserName == null
+                || !oldReservation.matchesUser(loggedInUserName)) {
+            return false;
+        }
+
+        return modifyReservation(oldReservation, newReservation);
+    }
+    public boolean adminModifyReservation(
+            ReservationRecord oldReservation,
+            ReservationRecord newReservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return modifyReservation(oldReservation, newReservation);
+    }
+    public boolean adminCancelReservation(
+            ReservationRecord reservation,
+            boolean isAdmin
+    ) {
+        if (!isAdmin) {
+            return false;
+        }
+
+        return cancelReservation(reservation);
     }
     public boolean modifyReservation(ReservationRecord oldReservation,
                                      ReservationRecord newReservation) {
@@ -146,6 +204,55 @@ public class ReservationController {
         } catch (java.time.format.DateTimeParseException e) {
             return false;
         }
+    }
+    // US23 View All Reservations - returns every reservation in chronological order.
+    public java.util.List<ReservationRecord> getAllReservations() {
+        java.util.List<ReservationRecord> allReservations =
+                new java.util.ArrayList<>(reservations);
+
+        allReservations.sort(
+                java.util.Comparator
+                        .comparing(ReservationRecord::getDate)
+                        .thenComparing(ReservationRecord::getStartTime)
+        );
+
+        return allReservations;
+    }
+
+    // US24 Usage Report - counts reservations for each known space.
+    public java.util.Map<String, Integer> getUsageReport() {
+        java.util.Map<String, Integer> usageReport = new java.util.TreeMap<>();
+
+        usageReport.put("Auditorium", 0);
+        usageReport.put("Conference Room", 0);
+        usageReport.put("Study Room", 0);
+
+        for (ReservationRecord reservation : reservations) {
+            String spaceName = reservation.getSpaceName();
+
+            usageReport.put(
+                    spaceName,
+                    usageReport.getOrDefault(spaceName, 0) + 1
+            );
+        }
+
+        return usageReport;
+    }
+
+    // US22 Daily Summary - groups reservation counts by date in chronological order.
+    public Map<String, Integer> getDailySummary() {
+        Map<String, Integer> dailySummary = new TreeMap<>();
+
+        for (ReservationRecord reservation : reservations) {
+            String date = reservation.getDate();
+
+            dailySummary.put(
+                    date,
+                    dailySummary.getOrDefault(date, 0) + 1
+            );
+        }
+
+        return dailySummary;
     }
 
     // US12 Suggest Times - returns available one-hour reservation times for a space and date.

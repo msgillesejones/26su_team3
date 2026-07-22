@@ -1,8 +1,8 @@
 package com.team3.persistence;
 
+import com.example._6su_team3.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.team3.model.ReservationRecord;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,29 +12,29 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReservationPersistence {
+public class RegistrationPersistence {
 
     private final String fileName;
 
-    public ReservationPersistence() {
-        this("reservations.json");
+    public RegistrationPersistence() {
+        this("users.json");
     }
 
-    public ReservationPersistence(String fileName) {
+    public RegistrationPersistence(String fileName) {
         this.fileName = fileName;
     }
 
-    public void saveReservations(List<ReservationRecord> reservations) {
+    public void saveUsers(List<User> users) {
         Gson gson = new Gson();
 
         try (FileWriter writer = new FileWriter(fileName)) {
-            gson.toJson(reservations, writer);
+            gson.toJson(users, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public List<ReservationRecord> loadReservations() {
+    public List<User> loadUsers() {
         File file = new File(fileName);
 
         if (!file.exists()) {
@@ -44,17 +44,16 @@ public class ReservationPersistence {
         Gson gson = new Gson();
 
         try (FileReader reader = new FileReader(file)) {
-            Type reservationListType =
-                    new TypeToken<List<ReservationRecord>>() { }.getType();
+            Type userListType =
+                    new TypeToken<List<User>>() { }.getType();
 
-            List<ReservationRecord> reservations =
-                    gson.fromJson(reader, reservationListType);
+            List<User> users = gson.fromJson(reader, userListType);
 
-            if (reservations == null) {
+            if (users == null) {
                 return new ArrayList<>();
             }
 
-            return reservations;
+            return users;
         } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>();

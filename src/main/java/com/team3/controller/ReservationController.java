@@ -1,5 +1,8 @@
 package com.team3.controller;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -295,6 +298,35 @@ public class ReservationController {
 
         return dailySummary;
     }
+
+    // US26 Export Report - writes the provided report data to a CSV file.
+    public boolean exportReportToCsv(
+            java.util.List<ReservationRecord> reportData,
+            String fileName
+    ) {
+        if (reportData == null || reportData.isEmpty()) {
+            return false;
+        }
+
+        try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write("Space Name,Date,Start Time,End Time,User\n");
+
+            for (ReservationRecord reservation : reportData) {
+                writer.write(
+                        reservation.getSpaceName() + ","
+                                + reservation.getDate() + ","
+                                + reservation.getStartTime() + ","
+                                + reservation.getEndTime() + ","
+                                + reservation.getUserName() + "\n"
+                );
+            }
+
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
 
     // US12 Suggest Times - returns available one-hour reservation times for a space and date.
     public java.util.List<String> suggestAvailableTimes(String spaceName, String date) {

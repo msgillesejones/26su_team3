@@ -1,5 +1,8 @@
 package com.team3.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import java.util.Map;
 
 import com.team3.model.ReservationRecord;
@@ -239,5 +242,50 @@ public class ReservationIntegrationTest {
         assertEquals(2, results.size());
         assertEquals("2026-07-22", results.get(0).getDate());
         assertEquals("2026-07-23", results.get(1).getDate());
+    }
+    // US26 Export Report - Acceptance Test
+    @Test
+    public void exportReportToCsvIntegrationTest() throws Exception {
+        ReservationController controller = new ReservationController(false);
+
+        controller.addReservation(new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-22",
+                "10:00",
+                "11:00"
+        ));
+
+        controller.addReservation(new ReservationRecord(
+                "Conference Room",
+                "Skylar",
+                "2026-07-23",
+                "12:00",
+                "13:00"
+        ));
+
+        java.util.List<ReservationRecord> filteredReport =
+                controller.getReservationsByDateRange(
+                        "2026-07-22",
+                        "2026-07-22"
+                );
+
+        Path tempFile = Files.createTempFile("reservation-report", ".csv");
+
+        boolean exported = controller.exportReportToCsv(
+                filteredReport,
+                tempFile.toString()
+        );
+
+        String csvContent = new String(Files.readAllBytes(tempFile));
+
+        assertTrue(exported);
+        assertTrue(csvContent.contains(
+                "Space Name,Date,Start Time,End Time,User"
+        ));
+        assertTrue(csvContent.contains(
+                "Study Room,2026-07-22,10:00,11:00,Gillese"
+        ));
+        assertTrue(!csvContent.contains("Skylar"));
     }
 }

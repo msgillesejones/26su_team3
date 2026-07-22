@@ -135,4 +135,34 @@ public class ReservationIntegrationTest {
                 new java.util.ArrayList<>(summary.keySet())
         );
     }
+    // US23 View All Reservations - Acceptance Test
+    @Test
+    public void viewAllReservationsIntegrationTest() {
+        ReservationController controller = new ReservationController(false);
+
+        controller.addReservation(new ReservationRecord(
+                "Auditorium",
+                "Jessica",
+                "2026-07-23",
+                "12:00",
+                "13:00"
+        ));
+
+        controller.addReservation(new ReservationRecord(
+                "Study Room",
+                "Gillese",
+                "2026-07-22",
+                "10:00",
+                "11:00"
+        ));
+
+        java.util.List<ReservationRecord> results =
+                controller.getAllReservations();
+
+        assertEquals(2, results.size());
+        assertEquals("2026-07-22", results.get(0).getDate());
+        assertEquals("Gillese", results.get(0).getUserName());
+        assertEquals("2026-07-23", results.get(1).getDate());
+        assertEquals("Jessica", results.get(1).getUserName());
+    }
 }

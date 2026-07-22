@@ -205,6 +205,19 @@ public class ReservationController {
             return false;
         }
     }
+    // US23 View All Reservations - returns every reservation in chronological order.
+    public java.util.List<ReservationRecord> getAllReservations() {
+        java.util.List<ReservationRecord> allReservations =
+                new java.util.ArrayList<>(reservations);
+
+        allReservations.sort(
+                java.util.Comparator
+                        .comparing(ReservationRecord::getDate)
+                        .thenComparing(ReservationRecord::getStartTime)
+        );
+
+        return allReservations;
+    }
 
     // US22 Daily Summary - groups reservation counts by date in chronological order.
     public Map<String, Integer> getDailySummary() {

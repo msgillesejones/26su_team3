@@ -14,12 +14,20 @@ import java.util.List;
 
 public class ReservationPersistence {
 
-    private static final String FILE_NAME = "reservations.json";
+    private final String fileName;
+
+    public ReservationPersistence() {
+        this("reservations.json");
+    }
+
+    public ReservationPersistence(String fileName) {
+        this.fileName = fileName;
+    }
 
     public void saveReservations(List<ReservationRecord> reservations) {
         Gson gson = new Gson();
 
-        try (FileWriter writer = new FileWriter(FILE_NAME)) {
+        try (FileWriter writer = new FileWriter(fileName)) {
             gson.toJson(reservations, writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -27,7 +35,7 @@ public class ReservationPersistence {
     }
 
     public List<ReservationRecord> loadReservations() {
-        File file = new File(FILE_NAME);
+        File file = new File(fileName);
 
         if (!file.exists()) {
             return new ArrayList<>();

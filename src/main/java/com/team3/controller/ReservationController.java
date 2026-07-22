@@ -7,14 +7,26 @@ public class ReservationController {
     private final java.util.List<ReservationRecord> reservations =
             new java.util.ArrayList<>();
 
-    private final ReservationPersistence persistence =
-            new ReservationPersistence();
+    private final ReservationPersistence persistence;
 
     public ReservationController() {
-        this(true);
+        this(new ReservationPersistence(), true);
     }
 
     public ReservationController(boolean persistenceEnabled) {
+        this(new ReservationPersistence(), persistenceEnabled);
+    }
+
+    public ReservationController(ReservationPersistence persistence) {
+        this(persistence, true);
+    }
+
+    public ReservationController(
+            ReservationPersistence persistence,
+            boolean persistenceEnabled
+    ) {
+        this.persistence = persistence;
+
         if (persistenceEnabled) {
             reservations.addAll(persistence.loadReservations());
         }
